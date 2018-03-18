@@ -59,3 +59,5 @@ gem 'slim'
 group :test do
   gem 'capybara' # for integration specs that require interacting with rails views
 end
+
+gem 'savon'
