@@ -38,6 +38,8 @@ gem 'jbuilder', '~> 2.5'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'factory_bot_rails' # for creating models in specs
+  gem 'rspec-rails' # respec for rails
 end
 
 group :development do
@@ -53,3 +55,7 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'slim'
+
+group :test do
+  gem 'capybara' # for integration specs that require interacting with rails views
+end
