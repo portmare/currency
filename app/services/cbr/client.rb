@@ -2,12 +2,15 @@
 module CBR
   # Savon client
   class Client
-    URI = 'http://www.cbr.ru/DailyInfoWebServ/DailyInfo.asmx?WSDL'
-
     attr_reader :client
 
     def initialize
-      @client = Savon.client(wsdl: URI, log: false)
+      @client = Savon.client do
+        wsdl Rails.root.join('lib', 'cbr.wsdl')
+        log Rails.env.development?
+        logger Rails.logger
+        pretty_print_xml true
+      end
     end
 
     def get_curs_on_date(date)
@@ -19,13 +22,21 @@ module CBR
                         :get_curs_on_date_xml_result,
                         :valute_data,
                         :valute_curs_on_date)
+    rescue Savon::HTTPError => e
+      Rails.logger.error e.message
+      []
     end
 
     class << self
-      def last_curs(currency)
+      def last_curses
         current_curses = new.get_curs_on_date(Time.zone.now)
-        hash = current_curses.find { |x| x[:vch_code].downcase.to_sym == currency.downcase.to_sym }
-        (hash || {})[:vcurs].to_f
+        current_curses.map { |h| [h[:vch_code].downcase, h[:vcurs].to_f] }
+                      .to_h
+                      .with_indifferent_access
+      end
+
+      def last_curs(currency)
+        last_curses[currency.to_s.downcase]
       end
     end
   end
