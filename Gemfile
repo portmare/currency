@@ -9,7 +9,7 @@ end
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.5'
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3'
+gem 'pg'
 # Use Puma as the app server
 gem 'puma', '~> 3.7'
 # Use SCSS for stylesheets
@@ -28,7 +28,7 @@ gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
-# gem 'redis', '~> 4.0'
+gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -39,7 +39,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'factory_bot_rails' # for creating models in specs
-  gem 'rspec-rails' # respec for rails
+  gem 'rspec-rails' # rspec for rails
 end
 
 group :development do
@@ -61,3 +61,7 @@ group :test do
 end
 
 gem 'savon'
+
+# job's backend and cron
+gem 'sidekiq'
+gem 'whenever', require: false
