@@ -1,5 +1,5 @@
-en:
+ru:
   activerecord:
     attributes:
       exchange_rate/currencies:
-          usd: 'american dollar'
+          usd: 'американский доллар'

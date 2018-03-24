@@ -10,6 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20180321195244) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+  enable_extension "hstore"
+  enable_extension "pg_trgm"
+
+  create_table "exchange_rates", force: :cascade do |t|
+    t.string "currency", null: false
+    t.decimal "rate", null: false
+    t.datetime "expired_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["currency"], name: "index_exchange_rates_on_currency"
+  end
 
 end
