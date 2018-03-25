@@ -17,7 +17,7 @@ describe CBR::Client do
   end
 
   context 'get latest curs of USD' do
-    subject { CBR::Client.last_curs('USD') }
+    subject { CBR::Client.last_curs('USD')[:rate] }
 
     it 'return real number is greather than 0' do
       expect(subject).to be > 0.0
