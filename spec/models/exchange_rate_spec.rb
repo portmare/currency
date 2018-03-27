@@ -61,5 +61,31 @@ RSpec.describe ExchangeRate, type: :model do
         expect(described_class.current_rates[:usd][:rate]).to eq 10_000
       end
     end
+
+    context 'default_rates' do
+      it 'return list with default rate with no DB rate' do
+        expect(described_class.default_rates.first).not_to be_nil
+      end
+
+      it 'return list with exists DB rates' do
+        exchange_rate = create(:exchange_rate)
+        expect(described_class.default_rates.first['rate']).to eq exchange_rate.rate
+      end
+    end
+
+    context 'latest_rates_hash' do
+      before :each do
+        create_list(:exchange_rate, 5)
+      end
+
+      it 'return empty hash of rates if there are no active' do
+        create(:exchange_rate, expired_at: Time.now - 1.seconds)
+        expect(described_class.latest_rates_hash).to eq({})
+      end
+
+      it 'return hash with latest active rates' do
+        expect(described_class.latest_rates_hash).not_to eq({})
+      end
+    end
   end
 end

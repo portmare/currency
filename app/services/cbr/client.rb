@@ -30,7 +30,7 @@ module CBR
     class << self
       def last_curses
         current_curses = new.get_curs_on_date(Time.zone.now)
-        current_curses.map { |h| [h[:vch_code].downcase, { rate: h[:vcurs].to_f, nom: h[:vnom] }] }
+        current_curses.map { |h| [h[:vch_code].downcase, { currency: h[:vch_code].downcase, rate: h[:vcurs].to_f, nom: h[:vnom] }] }
                       .to_h
                       .with_indifferent_access
       end

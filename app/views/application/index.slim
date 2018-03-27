@@ -1,8 +1,10 @@
-#app(currencies="#{ current_currencies }")
+#app(data-currencies="#{ current_currencies }")
   .container
     .row
       .col-xs-12
         h2 Текущий курс:
-        currency(v-for='currency in currencies' :key='currency.name' :rate='currency.rate' :locale='currency.locale' :nomination='currency.nomination')
+        currency(v-for='currency in currencies' :key='currency.name' :rate='currency.rate' :locale='currency.locale' :nom='currency.nom')
+
+= link_to 'Установить курсы валют', admin_exchange_rates_path, data: { turbolinks: false }
 
 = javascript_pack_tag 'currencies'

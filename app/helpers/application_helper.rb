@@ -1,5 +1,5 @@
 module ApplicationHelper
   def current_currencies
-    ExchangeRate.currencies.keys.map { |x| {'name': x} }.to_json
+    ExchangeRate.current_rates.values.to_json
   end
 end
