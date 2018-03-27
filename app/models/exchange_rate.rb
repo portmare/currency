@@ -6,21 +6,31 @@ class ExchangeRate < ApplicationRecord
   scope :active, -> { where('expired_at > ?', Time.zone.now) }
   scope :group_by_currency, -> { where("id IN (#{distinct_on_currency_ids})") }
 
+  def self.current_rates
+    rates = CBR::Client.last_curses.slice(*currencies.keys).deep_merge(latest_rates_hash)
+    localize_rates(rates)
+  end
+
+  def self.default_rates
+    latest_rates = group_by_currency.as_json(only: %i[currency rate expired_at])
+    options = { currency: nil, rate: nil, expired_at: nil }.stringify_keys
+    currencies.keys.map do |cur|
+      latest_rates.find { |r| r['currency'] == cur } || options.merge('currency' => cur)
+    end
+  end
+
+  private
+
   def self.latest_rates_hash
     Hash[
       active.group_by_currency.map do |x|
-        [x.currency, {
-          currency: x.currency,
-          rate: x.rate,
-          locale: human_attribute_name("currencies.#{x.currency}") }]
+        [x.currency, {currency: x.currency, rate: x.rate}]
       end
     ]
   end
 
-  def self.current_rates
-    CBR::Client.last_curses.slice(*currencies.keys).deep_merge(
-      latest_rates_hash
-    )
+  def self.localize_rates(hash)
+    hash.transform_values { |x| x.merge(locale: human_attribute_name("currencies.#{x['currency']}")) }
   end
 
   def self.distinct_on_currency_ids
@@ -35,13 +45,5 @@ class ExchangeRate < ApplicationRecord
 
       #{select(:id).from("t, LATERAL (#{inner_sql}) AS #{table_name}").where('t.currency IS NOT NULL').to_sql}
     SQL
-  end
-
-  def self.default_rates
-    latest_rates = group_by_currency.as_json(only: %i[currency rate expired_at])
-    options = { currency: nil, rate: nil, expired_at: nil }.stringify_keys
-    currencies.keys.map do |cur|
-      latest_rates.find { |r| r['currency'] == cur } || options.merge('currency' => cur)
-    end
   end
 end
