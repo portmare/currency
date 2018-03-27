@@ -6,6 +6,8 @@ class ExchangeRate < ApplicationRecord
   scope :active, -> { where('expired_at > ?', Time.zone.now) }
   scope :group_by_currency, -> { where("id IN (#{distinct_on_currency_ids})") }
 
+  after_create :update_currencies
+
   def self.current_rates
     rates = CBR::Client.last_curses.slice(*currencies.keys).deep_merge(latest_rates_hash)
     localize_rates(rates)
@@ -20,6 +22,10 @@ class ExchangeRate < ApplicationRecord
   end
 
   private
+
+  def update_currencies
+    CurrencyUpdaterWorker.perform_at(expired_at)
+  end
 
   def self.latest_rates_hash
     Hash[

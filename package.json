@@ -3,9 +3,13 @@
   "private": true,
   "dependencies": {
     "@rails/webpacker": "^3.3.1",
+    "luxon": "^1.0.0",
     "vue": "^2.5.16",
+    "vue-datetime": "^1.0.0-beta.3",
     "vue-loader": "^14.2.1",
-    "vue-template-compiler": "^2.5.16"
+    "vue-resource": "^1.5.0",
+    "vue-template-compiler": "^2.5.16",
+    "weekstart": "^1.0.0"
   },
   "devDependencies": {
     "webpack-dev-server": "2.11.2"
