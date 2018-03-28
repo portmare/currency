@@ -2,6 +2,8 @@ class ExchangeRate < ApplicationRecord
   enum currency: { usd: 'usd' }
 
   validates :rate, :expired_at, :currency, presence: true
+  validates :rate, numericality: { greater_than: 0 }
+  validate :check_expired_at
 
   scope :active, -> { where('expired_at > ?', Time.zone.now) }
   scope :group_by_currency, -> { where("id IN (#{distinct_on_currency_ids})") }
@@ -51,5 +53,9 @@ class ExchangeRate < ApplicationRecord
 
       #{select(:id).from("t, LATERAL (#{inner_sql}) AS #{table_name}").where('t.currency IS NOT NULL').to_sql}
     SQL
+  end
+
+  def check_expired_at
+    errors.add(:expired_at, :greater_than) unless Time.zone.now.to_i < expired_at.to_i
   end
 end

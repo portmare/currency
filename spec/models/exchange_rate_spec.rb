@@ -7,6 +7,16 @@ RSpec.describe ExchangeRate, type: :model do
       expect(exchange_rate).to be_valid
     end
 
+    it 'is valid with rate > 0' do
+      exchange_rate = build(:exchange_rate, rate: 0.01)
+      expect(exchange_rate).to be_valid
+    end
+
+    it 'is valid with expired_at > Time.now' do
+      exchange_rate = build(:exchange_rate, expired_at: Time.now + 1.second)
+      expect(exchange_rate).to be_valid
+    end
+
     it 'is not valid without currency' do
       exchange_rate = build(:exchange_rate, currency: nil)
       expect(exchange_rate).to be_invalid
@@ -21,12 +31,32 @@ RSpec.describe ExchangeRate, type: :model do
       exchange_rate = build(:exchange_rate, expired_at: nil)
       expect(exchange_rate).to be_invalid
     end
+
+    it 'is not valid with rate < 0' do
+      exchange_rate = build(:exchange_rate, rate: -0.01)
+      expect(exchange_rate).to be_invalid
+    end
+
+    it 'is not valid with rate == 0' do
+      exchange_rate = build(:exchange_rate, rate: 0)
+      expect(exchange_rate).to be_invalid
+    end
+
+    it 'is not valid with expired_at < Time.now' do
+      exchange_rate = build(:exchange_rate, expired_at: Time.now - 1.second)
+      expect(exchange_rate).to be_invalid
+    end
+
+    it 'is not valid with expired_at == Time.now' do
+      exchange_rate = build(:exchange_rate, expired_at: Time.now)
+      expect(exchange_rate).to be_invalid
+    end
   end
 
   context 'class methods' do
     context 'active' do
       before :each do
-        create(:exchange_rate, expired_at: Time.now - 1.seconds)
+        create(:exchange_rate, :skip_validation, expired_at: Time.now - 1.seconds)
       end
 
       it 'return array of exchange rates with expired_at > Time.now' do
@@ -52,7 +82,7 @@ RSpec.describe ExchangeRate, type: :model do
 
     context 'current_rates' do
       it 'return CBR rate for USD with expired_at < Time.now' do
-        create(:exchange_rate, expired_at: Time.now - 1.seconds, rate: 10_000)
+        create(:exchange_rate, :skip_validation, expired_at: Time.now - 1.seconds, rate: 10_000)
         expect(described_class.current_rates[:usd][:rate]).not_to eq 10_000
       end
 
@@ -79,7 +109,7 @@ RSpec.describe ExchangeRate, type: :model do
       end
 
       it 'return empty hash of rates if there are no active' do
-        create(:exchange_rate, expired_at: Time.now - 1.seconds)
+        create(:exchange_rate, :skip_validation, expired_at: Time.now - 1.seconds)
         expect(described_class.latest_rates_hash).to eq({})
       end
 

@@ -1,14 +1,19 @@
 = tag.div id: 'admin', data: { rates: @rates.to_json }
+  h3
+    | {{ notice }}
+  ul
+    li(v-for="error in errors")
+      | {{ error }}
   ul
     li(v-for="rate in rates")
       h3
         | {{ rate.currency.toUpperCase() }}
       div
         label Курс:
-        input(v-model="rate.rate")
+        input(v-model="rate.rate" type="number" :class="rateValid(rate.rate)")
       div
         label Истекает:
-        datetime(v-model="rate.expired_at" type="datetime")
+        datetime(v-model="rate.expired_at" type="datetime" :class="dateValid(rate.expired_at)")
       button(v-on:click="setRateExpired(rate)") Установить новый курс
 
 = link_to 'Назад', root_path, data: { turbolinks: false }

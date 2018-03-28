@@ -2,4 +2,18 @@ ru:
   activerecord:
     attributes:
       exchange_rate/currencies:
-          usd: 'американский доллар'
+        usd: 'американский доллар'
+      exchange_rate:
+        rate: 'Курс валюты'
+        expired_at: 'Дата окончания форсированного курса'
+    errors:
+      models:
+        exchange_rate:
+          attributes:
+            rate:
+              blank: 'не может быть пустым'
+              not_a_number: 'должен быть числом'
+              greater_than: 'должен быть числом более 0'
+            expired_at:
+              blank: 'не может быть пустой'
+              greater_than: 'должна быть больше текущего времени'

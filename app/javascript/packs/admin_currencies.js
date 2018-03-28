@@ -15,17 +15,40 @@ document.addEventListener('DOMContentLoaded', () => {
     App.admin_app = new Vue({
       el: element,
       data: {
-        rates: rates
+        rates: rates,
+        errors: [],
+        notice: ''
       },
       methods: {
         setRateExpired: function (data) {
-          console.log(data)
           this.$http.post('/admin', { exchange_rate: data })
               .then(response => {
-                console.log('response: ' + response)
-              }, error => {
-                console.log('error: ' + error)
+                this.errors = []
+                const rate = response.body.rate
+                const options = {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                  hour: 'numeric',
+                  minute: 'numeric',
+                  second: 'numeric'
+                }
+                const expired_at = new Date(rate.expired_at).toLocaleString('ru', options)
+                this.notice = `Форсированный курс для ${rate.currency.toUpperCase()} в значение ${rate.rate} успешно установлен до ${expired_at}!`
+              }, response => {
+                this.notice = ''
+                this.errors = response.body.errors
               })
+        },
+        rateValid: function (data) {
+          if (data <= 0 || data === '' || data == null) {
+            return 'text-danger'
+          }
+        },
+        dateValid: function (data) {
+          if (data === '' || data == null) {
+            return 'text-danger'
+          }
         }
       },
       components: {

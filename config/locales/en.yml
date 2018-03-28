@@ -3,3 +3,17 @@ en:
     attributes:
       exchange_rate/currencies:
           usd: 'american dollar'
+      exchange_rate:
+        rate: 'Exchange rate'
+        expired_at: 'End date of the forced exchange rate'
+    errors:
+      models:
+        exchange_rate:
+          attributes:
+            rate:
+              blank: 'can not be empty'
+              not_a_number: 'must be a number'
+              greater_than: 'must be a number greater than 0'
+            expired_at:
+              blank: 'can not be empty'
+              greater_than: 'should be greater than the current time'
