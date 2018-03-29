@@ -1,22 +1,41 @@
+- content_for(:title) do
+  | Установка форсированного курса валюты
+
 = tag.div id: 'admin', data: { rates: @rates.to_json }
-  h3
+  h4.text-warning
     | {{ notice }}
   ul
-    li(v-for="error in errors")
-      | {{ error }}
-  ul
+    li.text-danger(v-for="error in errors")
+      h5
+        | {{ error }}
+  br
+  ul.row.justify-content-md-center
     li(v-for="rate in rates")
-      h3
-        | {{ rate.currency.toUpperCase() }}
-      div
-        label Курс:
-        input(v-model="rate.rate" type="number" :class="rateValid(rate.rate)")
-      div
-        label Истекает:
-        datetime(v-model="rate.expired_at" type="datetime" :class="dateValid(rate.expired_at)")
-      button(v-on:click="setRateExpired(rate)") Установить новый курс
+      .row
+        .col-3
+          h3
+            | {{ rate.currency.toUpperCase() }} курс
+        .col-7
+          .row
+            input(v-model="rate.rate" type="number" :class="['form-control','col-4',rateValid(rate.rate)]")
+            label.mt-2.col-1
+              | до
+            datetime(v-model="rate.expired_at" type="datetime" :class="['col-7',dateValid(rate.expired_at)]")
+        .col-2
+          button.btn.btn-secondary(v-on:click="setRateExpired(rate)")
+            | Установить
 
-= link_to 'Назад', root_path, data: { turbolinks: false }
+br
+= link_to 'Назад', root_path, data: { turbolinks: false }, class: 'btn btn-secondary'
 
 = stylesheet_pack_tag 'admin_currencies'
 = javascript_pack_tag 'admin_currencies'
+
+javascript:
+  document.addEventListener('DOMContentLoaded', () => {
+    const elems_datetime = document.getElementsByClassName('vdatetime-input');
+    const array = Array.prototype.slice.call(elems_datetime);
+    array.forEach(function (item) {
+      item.classList.add('form-control')
+    });
+  })

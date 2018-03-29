@@ -1,5 +1,5 @@
 <template>
-  <h2>{{ nom }} {{ locale }} ~ {{ rate }} руб.</h2>
+  <h3>{{ nom }} {{ locale }} ~ {{ rate }} руб.</h3>
 </template>
 
 <script>

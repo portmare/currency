@@ -42,12 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         rateValid: function (data) {
           if (data <= 0 || data === '' || data == null) {
-            return 'text-danger'
+            return 'text-danger is-invalid'
           }
         },
         dateValid: function (data) {
           if (data === '' || data == null) {
-            return 'text-danger'
+            return 'text-danger is-invalid'
           }
         }
       },

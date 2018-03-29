@@ -1,10 +1,15 @@
 doctype html
 html
   head
-    title
-      | Currency2
+    title= content_for?(:title) ? yield(:title) : 'Курсы валют'
     = csrf_meta_tags
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
-  body
-    = yield
+    = javascript_pack_tag    'application'
+    = stylesheet_pack_tag    'bootstrap'
+  body.text-center
+    .d-flex.h-100.p-3.mx-auto.flex-column
+      header.mb-auto
+      .inner.cover
+        = yield
+      footer.mt-auto
