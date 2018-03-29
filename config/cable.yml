@@ -7,5 +7,4 @@ test:
 
 production:
   adapter: redis
-  url: redis://localhost:6379/1
-  channel_prefix: currency2_production
+  url: redis://h:p5baece78692ae39532bd6b735b18c0d928e553df9905c7110a863f86fb54ea19@ec2-34-248-91-71.eu-west-1.compute.amazonaws.com:23029
