@@ -7,6 +7,7 @@
     "jquery": "^3.3.1",
     "luxon": "^1.0.0",
     "popper.js": "^1.14.1",
+    "resolve-url-loader": "^2.3.0",
     "vue": "^2.5.16",
     "vue-datetime": "^1.0.0-beta.3",
     "vue-loader": "^14.2.1",
