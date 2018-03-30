@@ -13,7 +13,7 @@ RSpec.describe ExchangeRate, type: :model do
     end
 
     it 'is valid with expired_at > Time.now' do
-      exchange_rate = build(:exchange_rate, expired_at: Time.now + 1.second)
+      exchange_rate = build(:exchange_rate, expired_at: Time.now + 1.minutes)
       expect(exchange_rate).to be_valid
     end
 
