@@ -1,24 +1,46 @@
-# README
+# Currency
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Описание
 
-Things you may want to cover:
+Приложение для отображения периодически обновляемого курса валюты, и с возможностью установки форсированного курса валюты до определенного времени.
 
-* Ruby version
+Текущий курс валют запрашивается с сайта [CBR](https://www.cbr.ru/development/DWS/), используя протокол `SOAP`. 
+Само обновление в браузере клиента осуществляется через `Websocket` (`ActionCable`) из фоновой задачи (`Sidekiq`).
+За периодичность отвечает cron.
 
-* System dependencies
+## Режим development
 
-* Configuration
+Перед первым запуском приложения в режиме `development` необходимо выполнить:
+```
+> whenever --update-crontab --set environment=development
+```
+Команда добавит в cron ежеминутную задачу обновления курса.
 
-* Database creation
+## Запуск приложения в режиме development
 
-* Database initialization
+Для запуска приложения необходимо воспользоваться `foreman` со следующими параметрами:
+```
+> foreman start -f Procfile.dev
+```
 
-* How to run the test suite
+## Масштабируемость приложения
 
-* Services (job queues, cache servers, search engines, etc.)
+В модели `ExchangeRate`, используемую для форсированного курса, прописана только одна валюта: американский доллар `USD` в перечислении:
+```ruby
+class ExchangeRate < ApplicationRecord
+  enum currency: { usd: 'usd' }
+end
+```
+Для того, чтобы добавить или изменить валюту, достаточно прописать в данном перечислении коды желаемых валют, которые можно получить с сайта [CBR](http://www.cbr.ru/scripts/XML_valFull.asp). 
 
-* Deployment instructions
+## Существующие ограничения
 
-* ...
+* На странице `/admin` возможно вводить только положительный курс валюты.
+
+* На странице `/admin` нельзя указать секунды для уточнения окончания форсированного курса, в следствие ограниченности выбранного компонента `Vue`.
+
+* На странице `/admin` поля курса валюты и времени его окончания являются обязательными для ввода.
+
+## Heroku
+
+Приложение выложено на сервер `Heroku` и доступно по адресу: https://portmare-currency.herokuapp.com. 
