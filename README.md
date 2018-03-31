@@ -1,5 +1,7 @@
 # Currency
 
+[![Build Status](https://travis-ci.org/portmare/currency.svg?branch=master)](https://travis-ci.org/portmare/currency)
+
 ## Описание
 
 Приложение для отображения периодически обновляемого курса валюты, и с возможностью установки форсированного курса валюты до определенного времени.
@@ -10,9 +12,17 @@
 
 ## Режим development
 
+Перед запуском необходимо убедиться, что в локальной системе присутствуют следующие зависимости:
+
+- Ruby 2.3+
+- PostgreSQL 9.5+
+- Redis 3.2
+
 Перед первым запуском приложения в режиме `development` необходимо выполнить:
 ```
-> whenever --update-crontab --set environment=development
+$ bundle install
+$ rake db:create; rake db:migrate
+$ whenever --update-crontab --set environment=development
 ```
 Команда добавит в cron ежеминутную задачу обновления курса.
 
@@ -20,7 +30,7 @@
 
 Для запуска приложения необходимо воспользоваться `foreman` со следующими параметрами:
 ```
-> foreman start -f Procfile.dev
+$ foreman start -f Procfile.dev
 ```
 
 ## Масштабируемость приложения
