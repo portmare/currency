@@ -1,0 +1,16 @@
+language: ruby
+rvm:
+  - 2.3.1
+services:
+  - postgresql
+addons:
+  postgresql: "9.5"
+install:
+  - bundle install
+  - nvm install node
+  - node -v
+  - npm i -g yarn
+  - yarn
+before_script:
+  - psql -c 'create database fb_currency_test;' -U postgres
+  - RAILS_ENV=test bundle exec rails webpacker:compile
